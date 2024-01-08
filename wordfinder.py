@@ -15,7 +15,7 @@ class WordFinder():
 
     >>> file_path = "file.txt"
 
-    >>> my_words  = "asymptotic\nBayesian\ncalodemon\ndemisemitone\nextracanonical\n"
+    >>> my_words  = "asymptotic\nBayesian\ncalodemon\ndemisemitone\nextracanonical"
     
     >>> def make_file(file_path):
             file = open(file_path, "w")
@@ -33,20 +33,20 @@ class WordFinder():
     >>> wf.num_words == 5
     True
 
-    >>> [word.strip() for word in wf.words] == my_words.splitlines()
+    >>> [word for word in wf.words] == my_words.splitlines()
     True
 
-    >>> [word.strip() for word in wf.words].count(wf.random()) == 1
+    >>> [word for word in wf.words].count(wf.random()) == 1
     True
 
-    >>> [word.strip() for word in wf.words].count("awkward") == 1
+    >>> [word for word in wf.words].count("awkward") == 1
     False
 
-    >>> [word.strip() for word in wf.words].count("awkward") == 0
+    >>> [word for word in wf.words].count("awkward") == 0
     True
 
     """
-    
+
     def __init__(self, file_path):
         """Create class instance with list of words extracted from file at designated path"""
         self.path = file_path
@@ -59,10 +59,26 @@ class WordFinder():
         dictionary = open(self.path, "r")
         words = []
         for word in dictionary:
-            words.append(word)
+            words.append(word.rstrip())
         dictionary.close()
         return words
 
     def random(self):
         """Return random word from dictionary"""
-        return choice(self.words)[:-1]
+        return choice(self.words)
+
+class SpecialWordFinder(WordFinder):
+    """Subclass of WordFinder that is able to handle files with blank lines and comments that start with '#'"""
+
+    def __init__(self, file_path):
+        super().__init__(file_path)
+        
+    def get_words(self):
+        """Read file and assign attribute containing list of words in dictionary, excluding blank lines and comments"""
+        dictionary = open(self.path, "r")
+        words = []
+        for word in dictionary:
+            if word[0].isalpha():
+                words.append(word.rstrip())
+        dictionary.close()
+        return words

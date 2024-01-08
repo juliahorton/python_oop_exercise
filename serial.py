@@ -31,13 +31,25 @@ class SerialGenerator:
     def __init__(self, start):
         """Create class instance with the given start number"""
         self.start = start
-        self.increment = -1
+        self.next = start
+        self.counter = 0
+
+    def __repr__(self):
+        return f"<SerialGenerator start={self.start} next={self.next + 1}>"
         
     def generate(self):
         """Return the next sequential number"""
-        self.increment += 1
-        return self.start + self.increment
+        if self.counter == 0:
+            self.counter += 1
+            return self.start
+        if self.counter == 1:
+            self.counter += 1
+            self.next += 1
+            return self.next
+        self.next += 1
+        return self.next
 
     def reset(self):
         """Reset the number back to the original start number"""
-        self.increment = -1
+        self.next = self.start
+        self.counter = 0
